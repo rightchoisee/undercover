@@ -3,188 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Undercover - Mode Sécurisé</title>
+    <title>Undercover Pro - Master Edition</title>
     <style>
         :root { --primary: #e94560; --bg: #1a1a2e; --card: #16213e; --text: #ffffff; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 500px; background: var(--card); padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #0f3460; }
-        h1 { color: var(--primary); text-align: center; font-size: 2rem; text-transform: uppercase; margin-bottom: 20px; }
-        label { display: block; margin-top: 15px; font-weight: bold; }
-        input, select, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: none; font-size: 16px; box-sizing: border-box; }
-        input[type="text"], input[type="number"] { background: #0f3460; color: white; border: 1px solid #1a1a2e; }
-        button { background: var(--primary); color: white; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        button:hover { background: #ff4d6d; transform: scale(1.02); }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 500px; background: var(--card); padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #0f3460; }
+        h1 { color: var(--primary); text-align: center; font-size: 1.8rem; margin-bottom: 20px; }
+        input, select, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: none; font-size: 16px; box-sizing: border-box; }
+        input { background: #0f3460; color: white; border: 1px solid #1a1a2e; }
+        button { background: var(--primary); color: white; font-weight: bold; cursor: pointer; }
         .hidden { display: none; }
-        .role-box { background: #0f3460; border: 2px solid var(--primary); padding: 20px; border-radius: 15px; margin-top: 20px; text-align: center; }
-        .mot-secret { font-size: 28px; background: white; color: black; display: inline-block; padding: 10px 20px; border-radius: 8px; margin: 15px 0; font-weight: bold; }
+        .role-box { background: #0f3460; border: 2px solid var(--primary); padding: 15px; border-radius: 15px; text-align: center; margin: 15px 0; }
+        .mot-secret { font-size: 26px; background: white; color: black; display: inline-block; padding: 10px 20px; border-radius: 8px; font-weight: bold; }
         .rtl { direction: rtl; text-align: right; }
-        .checkbox-group { display: flex; flex-direction: column; gap: 10px; background: #0f3460; padding: 15px; border-radius: 10px; margin-top: 10px; }
-        .check-item { display: flex; align-items: center; gap: 12px; cursor: pointer; font-size: 14px; }
-        .check-item input { width: 22px; height: 22px; cursor: pointer; }
+        .checkbox-group { display: flex; flex-direction: column; gap: 8px; background: #0f3460; padding: 12px; border-radius: 10px; }
+        .check-item { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .score-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; }
+        .score-table th, .score-table td { padding: 8px; border-bottom: 1px solid #0f3460; text-align: left; }
+        .rtl .score-table th, .rtl .score-table td { text-align: right; }
+        .who-starts { color: #f1c40f; font-weight: bold; font-size: 1.1rem; margin: 20px 0; background: rgba(241, 196, 15, 0.1); padding: 15px; border-radius: 10px; text-align: center; border: 1px dashed #f1c40f; }
     </style>
 </head>
 <body>
 
-<div class="container" id="game-app">
+<div class="container" id="app">
     <h1>🕵️ Undercover</h1>
 
     <div id="step1">
-        <label>Langue / اللغة :</label>
-        <select id="lang-select" onchange="majLangueUI()">
+        <select id="lang-select" onchange="changerLangue()">
             <option value="fr">Français 🇫🇷</option>
-            <option value="ar">العربية 🇩🇿🇲🇦🇹🇳</option>
+            <option value="ar">العربية 🇩🇿</option>
         </select>
 
-        <label id="lbl-nb-joueurs">Nombre de joueurs :</label>
-        <input type="number" id="nb-joueurs" min="3" max="20" value="5">
+        <label id="lbl-nb">Nombre de joueurs :</label>
+        <input type="number" id="nb-joueurs" min="3" value="4">
 
-        <label id="lbl-roles">Rôles spéciaux (min. 1) :</label>
         <div class="checkbox-group">
-            <label class="check-item">
-                <input type="checkbox" id="check-undercover" checked onchange="forcerUnRole(this)"> 
-                <span id="txt-under">Inclure l'Imposteur</span>
-            </label>
-            <label class="check-item">
-                <input type="checkbox" id="check-white" checked onchange="forcerUnRole(this)"> 
-                <span id="txt-white">Inclure Mr. White</span>
-            </label>
+            <label class="check-item"><input type="checkbox" id="check-u" checked onchange="forcerUn(this)"> <span id="txt-u">Imposteur</span></label>
+            <label class="check-item"><input type="checkbox" id="check-w" checked onchange="forcerUn(this)"> <span id="txt-w">Mr. White</span></label>
         </div>
 
-        <button onclick="allerEtapeNoms()">Suivant / التالي</button>
+        <button onclick="configurerNoms()">Suivant / التالي</button>
+
+        <h3 id="lbl-class">🏆 Classement :</h3>
+        <table class="score-table" id="score-body"></table>
+        <button style="background:#555; font-size:12px;" onclick="resetScores()">Réinitialiser / مسح</button>
     </div>
 
     <div id="step2" class="hidden">
-        <p id="lbl-entrez-noms">Entrez les prénoms :</p>
+        <p id="lbl-noms">Prénoms :</p>
         <div id="inputs-container"></div>
-        <button onclick="demarrerPartie()" id="btn-start">LANCER</button>
+        <button onclick="lancerManche()">Lancer la Manche</button>
     </div>
 
-    <div id="game-screen" class="hidden">
-        <h2 id="nom-actuel" style="text-align: center;">---</h2>
+    <div id="step3" class="hidden">
+        <h2 id="nom-actuel" style="text-align:center;">---</h2>
         <button id="btn-reveler" onclick="reveler()">VOIR MON MOT</button>
-
         <div id="secret-area" class="hidden">
             <div class="role-box">
-                <p id="label-consigne">Ton mot secret :</p>
+                <p id="lbl-ton-mot">Ton mot secret :</p>
                 <div id="mot-affiche" class="mot-secret">---</div>
             </div>
-            <button onclick="prochain()" id="btn-cache">OK</button>
+            <button onclick="prochain()">OK, CACHER</button>
         </div>
+    </div>
+
+    <div id="step4" class="hidden">
+        <div class="who-starts" id="qui-commence-msg"></div>
+        <h3 id="lbl-qui-gagne" style="text-align:center;">Qui a gagné ?</h3>
+        <button style="background:#2ecc71;" onclick="noterScore('C')">LES CIVILS</button>
+        <button style="background:#e67e22;" onclick="noterScore('I')">LES IMPOSTEURS</button>
     </div>
 </div>
 
 <script>
-const dictionnaire = {
-    fr: [
-        {c:"Lion", u:"Tigre"}, {c:"Café", u:"Thé"}, {c:"Avion", u:"Hélicoptère"}, {c:"Pizza", u:"Burger"},
-        {c:"Stylo", u:"Crayon"}, {c:"Soleil", u:"Lune"}, {c:"Forêt", u:"Jungle"}, {c:"Miel", u:"Confiture"},
-        {c:"Bateau", u:"Sous-marin"}, {c:"Montagne", u:"Colline"}, {c:"Docteur", u:"Infirmier"}
-    ],
-    ar: [
-        {c:"أسد", u:"نمر"}, {c:"قهوة", u:"شاي"}, {c:"خبز", u:"كسكس"}, {c:"شمس", u:"قمر"},
-        {c:"قلم", u:"مرسام"}, {c:"تفاح", u:"موز"}, {c:"طائرة", u:"مروحية"}, {c:"ذهب", u:"فضة"},
-        {c:"بحر", u:"محيط"}, {c:"جمل", u:"حصان"}, {c:"مدرسة", u:"جامعة"}
-    ]
+const dico = {
+    fr: [{c:"Lion", u:"Tigre"}, {c:"Café", u:"Thé"}, {c:"Avion", u:"Hélico"}, {c:"Pizza", u:"Burger"}, {c:"Stylo", u:"Crayon"}, {c:"Forêt", u:"Jungle"}, {c:"Miel", u:"Confiture"}, {c:"Soleil", u:"Lune"}],
+    ar: [{c:"أسد", u:"نمر"}, {c:"قهوة", u:"شاي"}, {c:"خبز", u:"كسكس"}, {c:"طائرة", u:"مروحية"}, {c:"قلم", u:"مرسام"}, {c:"صحراء", u:"غابة"}, {c:"عسل", u:"مربى"}, {c:"شمس", u:"قمر"}]
 };
 
-let game = { players: [], idx: 0, lang: 'fr' };
+let game = { 
+    players: [], 
+    cur: 0, 
+    lang: 'fr', 
+    scores: JSON.parse(localStorage.getItem('scores_under')) || {} 
+};
 
-// SÉCURITÉ : Empêche de décocher les deux
-function forcerUnRole(elementModifie) {
-    const under = document.getElementById('check-undercover');
-    const white = document.getElementById('check-white');
-    
-    if (!under.checked && !white.checked) {
-        alert(game.lang === 'fr' ? "Au moins un rôle spécial est requis !" : "يجب اختيار دور خاص واحد على الأقل !");
-        elementModifie.checked = true; // Recoche automatiquement l'élément que l'utilisateur a tenté de décocher
-    }
-}
-
-function majLangueUI() {
+function changerLangue() {
     game.lang = document.getElementById('lang-select').value;
     const isAr = game.lang === 'ar';
     document.body.classList.toggle('rtl', isAr);
-    document.getElementById('game-app').classList.toggle('rtl', isAr);
-    
-    document.getElementById('lbl-nb-joueurs').innerText = isAr ? "عدد اللاعبين :" : "Nombre de joueurs :";
-    document.getElementById('txt-under').innerText = isAr ? "إضافة الجاسوس" : "Inclure l'Imposteur";
-    document.getElementById('txt-white').innerText = isAr ? "إضافة مستر وايت" : "Inclure Mr. White";
-    document.getElementById('lbl-roles').innerText = isAr ? "الأدوار الخاصة :" : "Rôles spéciaux :";
+    document.getElementById('lbl-nb').innerText = isAr ? "عدد اللاعبين :" : "Nombre de joueurs :";
+    document.getElementById('lbl-class').innerText = isAr ? "🏆 الترتيب :" : "🏆 Classement :";
+    afficherScores();
 }
 
-function allerEtapeNoms() {
-    const n = parseInt(document.getElementById('nb-joueurs').value);
-    const container = document.getElementById('inputs-container');
-    container.innerHTML = "";
-    
-    document.getElementById('lbl-entrez-noms').innerText = game.lang === 'fr' ? "Entrez les prénoms :" : "أدخل الأسماء :";
-    document.getElementById('btn-start').innerText = game.lang === 'fr' ? "DÉMARRER" : "ابدأ";
+function forcerUn(el) {
+    if(!document.getElementById('check-u').checked && !document.getElementById('check-w').checked) el.checked = true;
+}
 
-    for (let i = 1; i <= n; i++) {
-        container.innerHTML += `<input type="text" id="p${i}" placeholder="${game.lang === 'fr' ? 'Joueur' : 'لاعب'} ${i}">`;
+function configurerNoms() {
+    const n = document.getElementById('nb-joueurs').value;
+    const container = document.getElementById('inputs-container');
+    const memoire = JSON.parse(localStorage.getItem('noms_under')) || [];
+    container.innerHTML = "";
+    for (let i = 0; i < n; i++) {
+        container.innerHTML += `<input type="text" class="name-in" value="${memoire[i] || ''}" placeholder="Joueur ${i+1}">`;
     }
     document.getElementById('step1').classList.add('hidden');
     document.getElementById('step2').classList.remove('hidden');
 }
 
-function demarrerPartie() {
-    const n = parseInt(document.getElementById('nb-joueurs').value);
-    const hasUnder = document.getElementById('check-undercover').checked;
-    const hasWhite = document.getElementById('check-white').checked;
-    
-    const dico = dictionnaire[game.lang];
-    const duo = dico[Math.floor(Math.random() * dico.length)];
+function lancerManche() {
+    const inputs = document.querySelectorAll('.name-in');
+    const noms = Array.from(inputs).map(i => i.value || i.placeholder);
+    localStorage.setItem('noms_under', JSON.stringify(noms));
 
+    const hasU = document.getElementById('check-u').checked;
+    const hasW = document.getElementById('check-w').checked;
+    const pair = dico[game.lang][Math.floor(Math.random() * dico[game.lang].length)];
+    
     let roles = [];
-    if(hasUnder) roles.push({ mot: duo.u });
-    if(hasWhite) roles.push({ isWhite: true, mot: game.lang === 'fr' ? "Tu es Mr. WHITE !" : "أنت مستر وايت !" });
-    
-    // Remplissage avec les civils
-    while(roles.length < n) {
-        roles.push({ mot: duo.c });
-    }
+    if(hasU) roles.push({m: pair.u, r:'I', type:'under'}); // I = Imposteur
+    if(hasW) roles.push({m: game.lang==='fr'?'Mr. WHITE':'مستر وايت', r:'I', type:'white'});
+    while(roles.length < noms.length) roles.push({m: pair.c, r:'C', type:'civil'}); // C = Civil
 
-    // Mélange
     roles.sort(() => Math.random() - 0.5);
-
-    game.players = [];
-    for (let i = 1; i <= n; i++) {
-        let name = document.getElementById(`p${i}`).value || (game.lang === 'fr' ? `Joueur ${i}` : `لاعب ${i}`);
-        game.players.push({ name: name, mot: roles[i-1].mot });
-    }
-
+    game.players = noms.map((n, i) => ({ n, m: roles[i].m, r: roles[i].r, type: roles[i].type }));
+    game.cur = 0;
+    
     document.getElementById('step2').classList.add('hidden');
-    document.getElementById('game-screen').classList.remove('hidden');
+    document.getElementById('step3').classList.remove('hidden');
     majTour();
 }
 
 function majTour() {
-    if (game.idx < game.players.length) {
-        document.getElementById('nom-actuel').innerText = game.players[game.idx].name;
+    if (game.cur < game.players.length) {
+        document.getElementById('nom-actuel').innerText = game.players[game.cur].n;
         document.getElementById('btn-reveler').classList.remove('hidden');
         document.getElementById('secret-area').classList.add('hidden');
-        
-        document.getElementById('btn-reveler').innerText = game.lang === 'fr' ? "VOIR MON MOT" : "إظهار كلمتي";
-        document.getElementById('btn-cache').innerText = game.lang === 'fr' ? "OK" : "حسناً";
-        document.getElementById('label-consigne').innerText = game.lang === 'fr' ? "Ton mot secret :" : "كلمتك السرية :";
     } else {
-        document.getElementById('game-screen').innerHTML = `
-            <h2>${game.lang === 'fr' ? 'Débattez !' : 'ابدأوا النقاش !'}</h2>
-            <button onclick="location.reload()">Reset</button>
-        `;
+        finDistribution();
     }
 }
 
+function finDistribution() {
+    document.getElementById('step3').classList.add('hidden');
+    document.getElementById('step4').classList.remove('hidden');
+
+    // FILTRE : On prend tout le monde SAUF les "white"
+    const éligibles = game.players.filter(p => p.type !== 'white');
+    const gagnant = éligibles[Math.floor(Math.random() * éligibles.length)];
+
+    const msg = game.lang === 'fr' 
+        ? `🎤 C'est <b>${gagnant.n}</b> qui commence à décrire son mot !` 
+        : `🎤 <b>${gagnant.n}</b> هو من يبدأ بوصف كلمته !`;
+    
+    document.getElementById('qui-commence-msg').innerHTML = msg;
+}
+
 function reveler() {
-    document.getElementById('mot-affiche').innerText = game.players[game.idx].mot;
+    document.getElementById('mot-affiche').innerText = game.players[game.currentIndex || game.cur].m;
     document.getElementById('btn-reveler').classList.add('hidden');
     document.getElementById('secret-area').classList.remove('hidden');
 }
 
-function prochain() {
-    game.idx++;
-    majTour();
+function prochain() { game.cur++; majTour(); }
+
+function noterScore(gagnant) {
+    game.players.forEach(p => {
+        if(p.r === gagnant) game.scores[p.n] = (game.scores[p.n] || 0) + 1;
+        else game.scores[p.n] = game.scores[p.n] || 0;
+    });
+    localStorage.setItem('scores_under', JSON.stringify(game.scores));
+    location.reload();
 }
+
+function afficherScores() {
+    const table = document.getElementById('score-body');
+    let sorted = Object.entries(game.scores).sort((a,b) => b[1] - a[1]);
+    table.innerHTML = sorted.map(([n, s]) => `<tr><td>${n}</td><td><b>${s} pts</b></td></tr>`).join('');
+}
+
+function resetScores() { localStorage.removeItem('scores_under'); game.scores = {}; afficherScores(); }
+
+window.onload = () => { changerLangue(); afficherScores(); };
 </script>
 </body>
 </html>
